@@ -1,11 +1,9 @@
 package io.crstudio.tutor.auth.entity
 
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import jakarta.persistence.*
 
-@Table(name = "USER")
+@Entity
+@Table(name = "USER_TABLE")
 data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
