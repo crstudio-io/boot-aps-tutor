@@ -1,6 +1,7 @@
-package io.crstudio.tutor.problem.model
+package io.crstudio.tutor.solution.model
 
 import io.crstudio.tutor.auth.model.User
+import io.crstudio.tutor.problem.model.Problem
 import jakarta.persistence.*
 
 @Entity
