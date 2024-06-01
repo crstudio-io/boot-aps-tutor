@@ -1,4 +1,4 @@
-package io.crstudio.tutor.problem.entity
+package io.crstudio.tutor.problem.model
 
 import jakarta.persistence.*
 

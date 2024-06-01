@@ -1,4 +1,4 @@
-package io.crstudio.tutor.auth.entity
+package io.crstudio.tutor.auth.model
 
 import jakarta.persistence.*
 

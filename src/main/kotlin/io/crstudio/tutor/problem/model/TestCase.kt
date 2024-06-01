@@ -1,16 +1,15 @@
-package io.crstudio.tutor.problem.entity
+package io.crstudio.tutor.problem.model
 
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "IO_EXAMPLE")
-data class IOExample(
+@Table(name = "TEST_CASE")
+data class TestCase(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long?,
-    val inputExample: String?,
-    val outputExample: String?,
-    val description: String?,
+    val input: String?,
+    val output: String?,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "prob_id")
