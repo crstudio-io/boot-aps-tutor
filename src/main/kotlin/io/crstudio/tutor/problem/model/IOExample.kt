@@ -8,7 +8,12 @@ data class IOExample(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long?,
+
+    @Lob
+    @Column(columnDefinition = "TEXT")
     val inputExample: String?,
+    @Lob
+    @Column(columnDefinition = "TEXT")
     val outputExample: String?,
     val description: String?,
 

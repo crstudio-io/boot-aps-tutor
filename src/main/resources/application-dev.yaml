@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    username: tutor
+    password: password
+    url: jdbc:postgresql://localhost:5432/tutor
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always

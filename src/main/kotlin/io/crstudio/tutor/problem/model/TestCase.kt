@@ -8,7 +8,11 @@ data class TestCase(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long?,
+    @Lob
+    @Column(columnDefinition = "TEXT")
     val input: String?,
+    @Lob
+    @Column(columnDefinition = "TEXT")
     val output: String?,
 
     @ManyToOne(fetch = FetchType.LAZY)
