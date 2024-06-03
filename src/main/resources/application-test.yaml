@@ -7,3 +7,7 @@ spring:
   sql:
     init:
       mode: always
+  rabbitmq:
+    username: user
+    password: password
+    host: localhost
