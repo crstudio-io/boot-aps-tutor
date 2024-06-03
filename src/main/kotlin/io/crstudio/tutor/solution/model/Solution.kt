@@ -11,7 +11,7 @@ data class Solution(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long?,
     @Lob
-    val code: String?,
+    val code: String,
 
     @Enumerated(value = EnumType.STRING)
     val lang: Lang = Lang.JAVA17,

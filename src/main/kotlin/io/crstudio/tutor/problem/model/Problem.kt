@@ -16,6 +16,6 @@ data class Problem(
 
     @OneToMany(mappedBy = "problem", fetch = FetchType.LAZY)
     val ioExamples: List<IOExample>? = mutableListOf(),
-    @OneToMany(mappedBy = "problem")
+    @OneToMany(mappedBy = "problem", fetch = FetchType.LAZY)
     val testCases: List<TestCase>? = mutableListOf()
 )
