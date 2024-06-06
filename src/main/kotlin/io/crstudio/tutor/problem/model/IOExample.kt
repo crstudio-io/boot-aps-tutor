@@ -9,12 +9,11 @@ data class IOExample(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long?,
 
-    @Lob
     @Column(columnDefinition = "TEXT")
     val inputExample: String?,
-    @Lob
     @Column(columnDefinition = "TEXT")
     val outputExample: String?,
+    @Column(columnDefinition = "TEXT")
     val description: String?,
 
     @ManyToOne(fetch = FetchType.LAZY)

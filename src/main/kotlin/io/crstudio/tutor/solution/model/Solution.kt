@@ -10,7 +10,7 @@ data class Solution(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long?,
-    @Lob
+    @Column(columnDefinition = "TEXT")
     val code: String,
 
     @Enumerated(value = EnumType.STRING)
