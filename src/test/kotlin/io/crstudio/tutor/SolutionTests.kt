@@ -3,7 +3,6 @@ package io.crstudio.tutor
 import io.crstudio.tutor.solution.SolutionService
 import io.crstudio.tutor.solution.model.Lang
 import io.crstudio.tutor.solution.model.SolutionDto
-import io.crstudio.tutor.solution.model.Status
 import io.crstudio.tutor.solution.repos.SolutionRepo
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -25,7 +24,7 @@ class SolutionTests {
     @Test
     @DisplayName("create solution")
     fun createSolution() {
-        val solutionDto = solutionService.requestGrade(
+        val solutionDto = solutionService.createSolution(
             userId = 1,
             probId = 1,
             solutionDto = SolutionDto(

@@ -23,7 +23,7 @@ class SolutionService(
     val solutionProducer: SolutionProducer,
 ) {
     // create solution
-    fun requestGrade(userId: Long, probId: Long, solutionDto: SolutionDto): SolutionDto {
+    fun createSolution(userId: Long, probId: Long, solutionDto: SolutionDto): SolutionDto {
         // record to database
         val solution = solutionRepo.save(Solution(
             id = null,
