@@ -42,7 +42,7 @@ class SolutionService(
             code = solution.code,
         )
         solutionProducer.sendPayload(gradePayload)
-        return SolutionDto.fromEntity(solution)
+        return SolutionDto.fromEntity(solution, true)
     }
 
     fun findSolution(solutionId: Long) =

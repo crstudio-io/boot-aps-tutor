@@ -33,5 +33,5 @@ enum class Lang {
 }
 
 enum class Status {
-    PENDING, GRADING, SUCCESS, FAIL
+    PENDING, GRADING, SUCCESS, FAIL, ERROR
 }
