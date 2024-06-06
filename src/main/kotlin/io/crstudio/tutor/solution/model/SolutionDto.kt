@@ -8,7 +8,7 @@ data class SolutionDto(
     val score: Int?,
 ) {
     companion object {
-        fun fromEntity(solution: Solution, omitCode: Boolean = false) = SolutionDto(
+        fun fromEntity(solution: Solution, omitCode: Boolean = true) = SolutionDto(
             id = solution.id,
             lang = solution.lang,
             code = if (omitCode) "**omitted**" else solution.code,

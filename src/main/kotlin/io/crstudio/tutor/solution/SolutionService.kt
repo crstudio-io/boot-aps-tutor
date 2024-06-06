@@ -25,16 +25,18 @@ class SolutionService(
     // create solution
     fun createSolution(userId: Long, probId: Long, solutionDto: SolutionDto): SolutionDto {
         // record to database
-        val solution = solutionRepo.save(Solution(
-            id = null,
-            code = solutionDto.code,
-            lang = solutionDto.lang,
-            status = Status.PENDING,
-            problem = problemRepo.findByIdOrNull(probId)
-                ?: throw ResponseStatusException(HttpStatus.NOT_FOUND),
-            user = userRepo.findByIdOrNull(userId)
-                ?: throw ResponseStatusException(HttpStatus.NOT_FOUND),
-        ))
+        val solution = solutionRepo.save(
+            Solution(
+                id = null,
+                code = solutionDto.code,
+                lang = solutionDto.lang,
+                status = Status.PENDING,
+                problem = problemRepo.findByIdOrNull(probId)
+                    ?: throw ResponseStatusException(HttpStatus.NOT_FOUND),
+                user = userRepo.findByIdOrNull(userId)
+                    ?: throw ResponseStatusException(HttpStatus.NOT_FOUND),
+            )
+        )
 
         val gradePayload = GradePayload(
             id = solution.id,
@@ -46,10 +48,15 @@ class SolutionService(
     }
 
     fun findSolution(solutionId: Long) =
-        solutionRepo.findByIdOrNull(solutionId)
-            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
-    fun findSolutionByUser(userId: Long, pageable: Pageable = PageRequest.of(0, 10)) =
-        solutionRepo.findAllByUserId(userId, pageable)
+        SolutionDto.fromEntity(
+            solutionRepo.findByIdOrNull(solutionId)
+                ?: throw ResponseStatusException(HttpStatus.NOT_FOUND),
+            false
+        )
+
+    fun findSolutionByUser(probId: Long, userId: Long, pageable: Pageable = PageRequest.of(0, 10)) =
+        solutionRepo.findAllByUserId(userId, pageable).map(SolutionDto::fromEntity)
+
     fun findSolutionByProblem(probId: Long, pageable: Pageable = PageRequest.of(0, 10)) =
-        solutionRepo.findAllByProblemId(probId, pageable)
+        solutionRepo.findAllByProblemId(probId, pageable).map(SolutionDto::fromEntity)
 }
