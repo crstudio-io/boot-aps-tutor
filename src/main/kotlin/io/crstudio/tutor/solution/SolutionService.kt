@@ -6,7 +6,7 @@ import io.crstudio.tutor.solution.model.GradePayload
 import io.crstudio.tutor.solution.model.Solution
 import io.crstudio.tutor.solution.model.SolutionDto
 import io.crstudio.tutor.solution.model.Status
-import io.crstudio.tutor.solution.rabbit.SolutionProducer
+import io.crstudio.tutor.rabbit.SolutionProducer
 import io.crstudio.tutor.solution.repos.SolutionRepo
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
