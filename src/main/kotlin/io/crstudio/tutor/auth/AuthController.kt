@@ -10,12 +10,22 @@ import org.springframework.web.bind.annotation.*
 class AuthController(
     val authService: AuthService
 ) {
+
+
     @PostMapping(
         "signin",
         consumes = [MediaType.APPLICATION_JSON_VALUE]
     )
-    fun signin(@RequestBody jwtRequestDto: JwtRequestDto): String {
-        return authService.testIssueJwt(jwtRequestDto)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun requestSignIn(@RequestBody jwtRequestDto: JwtRequestDto) {
+        authService.requestSignIn(jwtRequestDto)
+    }
+
+    @GetMapping(
+        "signin"
+    )
+    fun issueJwt(@RequestParam("token") token: String): String {
+        return authService.finalizeSignIn(token)
     }
 
     // TODO this is a test method to test authenticated requests

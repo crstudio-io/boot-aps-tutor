@@ -11,3 +11,7 @@ spring:
     username: user
     password: password
     host: localhost
+  data:
+    redis:
+      username: default
+      password: systempass

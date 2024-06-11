@@ -15,3 +15,10 @@ spring:
     username: user
     password: password
     host: localhost
+  data:
+    redis:
+      username: default
+      password: systempass
+logging:
+  level:
+    io.crstudio.tutor.auth: debug
