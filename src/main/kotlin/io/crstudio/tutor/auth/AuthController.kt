@@ -27,11 +27,4 @@ class AuthController(
     fun issueJwt(@RequestParam("token") token: String): String {
         return authService.finalizeSignIn(token)
     }
-
-    // TODO this is a test method to test authenticated requests
-    @GetMapping(
-        "authenticated"
-    )
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun testAuthenticated() {}
 }

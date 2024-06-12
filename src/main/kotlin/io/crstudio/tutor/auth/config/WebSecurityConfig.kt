@@ -24,7 +24,7 @@ class WebSecurityConfig(
             }
             .authorizeHttpRequests { auth ->
                 auth.requestMatchers("/auth/signin").permitAll()
-                auth.requestMatchers("/auth/authenticated").authenticated()
+                auth.requestMatchers("/test/auth/authenticated").authenticated()
                 auth.requestMatchers("/problem/**").permitAll()
             }
             .sessionManagement { session ->

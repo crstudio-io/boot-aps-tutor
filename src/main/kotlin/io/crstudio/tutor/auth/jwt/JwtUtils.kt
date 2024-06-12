@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 import java.util.*
 import javax.crypto.SecretKey
 
@@ -30,7 +31,7 @@ class JwtUtils(
         val jwtClaims = Jwts.claims()
             .setSubject(userId.toString())
             .setIssuedAt(Date.from(now))
-            .setExpiration(Date.from(now.plusSeconds(60)))
+            .setExpiration(Date.from(now.plus(7, ChronoUnit.DAYS)))
 
         jwtClaims["aut"] = authorities
 
