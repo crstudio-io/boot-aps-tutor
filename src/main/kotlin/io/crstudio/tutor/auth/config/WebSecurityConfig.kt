@@ -2,6 +2,7 @@ package io.crstudio.tutor.auth.config
 
 import io.crstudio.tutor.auth.jwt.JwtFilter
 import io.crstudio.tutor.auth.jwt.JwtUtils
+import io.crstudio.tutor.auth.repo.UserRepo
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.RedisConnectionFactory
@@ -14,7 +15,8 @@ import org.springframework.security.web.access.intercept.AuthorizationFilter
 
 @Configuration
 class WebSecurityConfig(
-    val jwtUtils: JwtUtils
+    val jwtUtils: JwtUtils,
+    val userRepo: UserRepo,
 ) {
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
@@ -31,7 +33,7 @@ class WebSecurityConfig(
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
             .addFilterBefore(
-                JwtFilter(jwtUtils),
+                JwtFilter(userRepo, jwtUtils),
                 AuthorizationFilter::class.java
             )
 

@@ -1,17 +1,19 @@
 package io.crstudio.tutor.auth.jwt
 
+import io.crstudio.tutor.auth.model.IdBasedProxyAuthentication
+import io.crstudio.tutor.auth.repo.UserRepo
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.HttpHeaders
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.filter.OncePerRequestFilter
 
 
 class JwtFilter(
-    private val jwtUtils: JwtUtils
+    private val userRepo: UserRepo,
+    private val jwtUtils: JwtUtils,
 ): OncePerRequestFilter(){
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -35,14 +37,23 @@ class JwtFilter(
 
         val context = SecurityContextHolder.createEmptyContext()
         val claims = jwtUtils.parseClaims(jwt)
+
+        val userId = runCatching {
+            claims.subject.toLong()
+        }.getOrElse {
+            logger.warn("subject cannot be cast to Long: ${claims.subject}")
+            filterChain.doFilter(request, response)
+            return
+        }
         val authClaims = claims["aut"]
         val authorities = if (authClaims is MutableCollection<*>) {
             authClaims.map { GrantedAuthority { it.toString() } }
         } else mutableListOf()
-        context.authentication = UsernamePasswordAuthenticationToken(
-            claims.subject,
-            jwt,
-            authorities
+
+        context.authentication = IdBasedProxyAuthentication(
+            authorities,
+            userId,
+            userRepo
         )
         SecurityContextHolder.setContext(context)
 
