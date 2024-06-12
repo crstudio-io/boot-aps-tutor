@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.data.redis.serializer.RedisSerializer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
@@ -41,6 +42,8 @@ class WebSecurityConfig(
     fun signInSessionTemplate(connectionFactory: RedisConnectionFactory): RedisTemplate<String, Long> {
         val template = RedisTemplate<String, Long>()
         template.connectionFactory = connectionFactory
+        template.keySerializer = RedisSerializer.string()
+        template.valueSerializer = RedisSerializer.java()
         return template
     }
 }

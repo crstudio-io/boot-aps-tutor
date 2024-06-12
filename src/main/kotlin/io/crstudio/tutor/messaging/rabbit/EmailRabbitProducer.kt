@@ -27,7 +27,7 @@ class EmailRabbitProducer(
         val context = Context()
         context.setVariable("serviceHost", serviceHost)
         context.setVariable("email", params.email)
-        context.setVariable("signInLink", Path(serviceHost, params.link).toString())
+        context.setVariable("signInLink", "$serviceHost${params.link}")
         val htmlBody = templateEngine.process("email/signin", context)
         val payload = Payload(
             subject = "Sign In Request",
