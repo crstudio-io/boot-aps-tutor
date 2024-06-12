@@ -22,3 +22,6 @@ spring:
 logging:
   level:
     io.crstudio.tutor.auth: debug
+
+service:
+  host: http://localhost:8080

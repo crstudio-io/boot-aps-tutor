@@ -1,4 +1,4 @@
-package io.crstudio.tutor.solution.model
+package io.crstudio.tutor.rabbit.model
 
 import kotlinx.serialization.Serializable
 

@@ -15,3 +15,6 @@ spring:
     redis:
       username: default
       password: systempass
+
+service:
+  host: http://localhost:8080

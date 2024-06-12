@@ -1,6 +1,6 @@
 package io.crstudio.tutor.rabbit
 
-import io.crstudio.tutor.solution.model.GradePayload
+import io.crstudio.tutor.rabbit.model.GradePayload
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.springframework.amqp.core.Queue
