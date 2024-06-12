@@ -1,4 +1,4 @@
-package io.crstudio.tutor.rabbit
+package io.crstudio.tutor.messaging.rabbit
 
 import org.springframework.amqp.core.Queue
 import org.springframework.context.annotation.Bean

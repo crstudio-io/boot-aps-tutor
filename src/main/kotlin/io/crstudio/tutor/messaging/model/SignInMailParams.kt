@@ -1,4 +1,4 @@
-package io.crstudio.tutor.rabbit.model
+package io.crstudio.tutor.messaging.model
 
 data class SignInMailParams(
     val email: String,

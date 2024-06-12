@@ -1,7 +1,8 @@
-package io.crstudio.tutor.rabbit
+package io.crstudio.tutor.messaging
 
-import io.crstudio.tutor.rabbit.model.GradePayload
-import io.crstudio.tutor.rabbit.model.SignInMailParams
+import io.crstudio.tutor.messaging.model.GradePayload
+import io.crstudio.tutor.messaging.model.SignInMailParams
+import io.crstudio.tutor.messaging.rabbit.EmailRabbitProducer
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.junit.jupiter.api.DisplayName
@@ -76,9 +77,11 @@ class RabbitTests{
     fun testSignInEmail(
         @Autowired
         emailProducer: EmailProducer
-    ) = emailProducer.signInEmail(SignInMailParams(
+    ) = emailProducer.signInEmail(
+        SignInMailParams(
         "aquashdw@gmail.com",
         "/link"
-    ))
+    )
+    )
 
 }

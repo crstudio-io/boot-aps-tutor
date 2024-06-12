@@ -1,6 +1,7 @@
-package io.crstudio.tutor.rabbit
+package io.crstudio.tutor.messaging.rabbit
 
-import io.crstudio.tutor.rabbit.model.SignInMailParams
+import io.crstudio.tutor.messaging.EmailProducer
+import io.crstudio.tutor.messaging.model.SignInMailParams
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -9,10 +10,8 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-import org.springframework.web.util.UriBuilder
 import org.thymeleaf.context.Context
 import org.thymeleaf.spring6.SpringTemplateEngine
-import java.net.URI
 import kotlin.io.path.Path
 
 @Component

@@ -2,8 +2,8 @@ package io.crstudio.tutor.solution
 
 import io.crstudio.tutor.auth.repo.UserRepo
 import io.crstudio.tutor.problem.repos.ProblemRepo
-import io.crstudio.tutor.rabbit.SolutionProducer
-import io.crstudio.tutor.rabbit.model.GradePayload
+import io.crstudio.tutor.messaging.SolutionProducer
+import io.crstudio.tutor.messaging.model.GradePayload
 import io.crstudio.tutor.solution.model.Solution
 import io.crstudio.tutor.solution.model.SolutionDto
 import io.crstudio.tutor.solution.model.Status
