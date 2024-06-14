@@ -1,4 +1,4 @@
-package io.crstudio.tutor.auth.model
+package io.crstudio.tutor.auth.config
 
 import io.crstudio.tutor.auth.repo.UserIdProxy
 import org.springframework.http.HttpStatus

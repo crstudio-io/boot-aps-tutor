@@ -1,6 +1,6 @@
 package io.crstudio.tutor.auth.jwt
 
-import io.crstudio.tutor.auth.model.IdBasedProxyAuthentication
+import io.crstudio.tutor.auth.config.IdBasedProxyAuthentication
 import io.crstudio.tutor.auth.repo.UserRepo
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest

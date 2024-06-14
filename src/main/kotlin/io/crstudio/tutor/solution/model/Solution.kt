@@ -6,7 +6,7 @@ import jakarta.persistence.*
 
 @Entity
 @Table(name = "SOLUTION")
-data class Solution(
+class Solution(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long?,
@@ -34,4 +34,22 @@ enum class Lang {
 
 enum class Status {
     PENDING, GRADING, SUCCESS, FAIL, ERROR
+}
+
+data class SolutionDto(
+    var id: Long?,
+    val lang: Lang,
+    val code: String,
+    val status: Status?,
+    val score: Int?,
+) {
+    companion object {
+        fun fromEntity(solution: Solution, omitCode: Boolean = true) = SolutionDto(
+            id = solution.id,
+            lang = solution.lang,
+            code = if (omitCode) "**omitted**" else solution.code,
+            status = solution.status,
+            score = solution.score,
+        )
+    }
 }
