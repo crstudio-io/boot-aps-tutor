@@ -20,3 +20,19 @@ class IOExample(
     @JoinColumn(name = "prob_id")
     val problem: Problem
 )
+
+data class IOExampleDto(
+    val id: Long?,
+    val inputExample: String?,
+    val outputExample: String?,
+    val description: String?,
+) {
+    companion object {
+        fun fromEntity(ioExample: IOExample) = IOExampleDto(
+            id = ioExample.id,
+            inputExample = ioExample.inputExample,
+            outputExample = ioExample.outputExample,
+            description = ioExample.description,
+        )
+    }
+}

@@ -22,3 +22,17 @@ class TestCase(
     @JoinColumn(name = "prob_id")
     val problem: Problem
 )
+
+data class TestCaseDto(
+    val id: Long?,
+    val input: String?,
+    val output: String?,
+) {
+    companion object {
+        fun fromEntity(testCase: TestCase) = TestCaseDto(
+            id = testCase.id,
+            input = testCase.input,
+            output = testCase.output,
+        )
+    }
+}
