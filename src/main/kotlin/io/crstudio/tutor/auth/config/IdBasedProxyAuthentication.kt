@@ -12,12 +12,12 @@ import org.springframework.web.server.ResponseStatusException
  */
 class IdBasedProxyAuthentication<P, ID>(
     authorities: Collection<GrantedAuthority>,
-    val userId: ID,
-    val userProxy: UserIdProxy<P, ID>,
+    private val userId: ID,
+    private val userProxy: UserIdProxy<P, ID>,
 ): AbstractAuthenticationToken(
     authorities
 ) {
-    val user by lazy {
+    val user: P by lazy {
         userProxy.findById(userId).orElseThrow {
             ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)
         }

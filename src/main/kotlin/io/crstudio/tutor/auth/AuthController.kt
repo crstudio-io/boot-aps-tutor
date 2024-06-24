@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.*
 class AuthController(
     val authService: AuthService
 ) {
-
-
     @PostMapping(
         "signin",
         consumes = [MediaType.APPLICATION_JSON_VALUE]

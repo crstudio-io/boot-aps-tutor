@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("test/auth")
 class AuthTestController {
     private final val logger = LoggerFactory.getLogger(this.javaClass)
+
     @GetMapping(
         "authenticated"
     )
