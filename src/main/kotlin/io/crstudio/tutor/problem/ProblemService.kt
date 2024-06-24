@@ -1,10 +1,9 @@
 package io.crstudio.tutor.problem
 
 import io.crstudio.tutor.auth.AuthFacade
-import io.crstudio.tutor.problem.model.*
-import io.crstudio.tutor.problem.repos.IOExampleRepo
+import io.crstudio.tutor.problem.model.Problem
+import io.crstudio.tutor.problem.model.ProblemDto
 import io.crstudio.tutor.problem.repos.ProblemRepo
-import io.crstudio.tutor.problem.repos.TestCaseRepo
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
