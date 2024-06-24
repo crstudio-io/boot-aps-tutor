@@ -14,9 +14,9 @@ class TestCase(
     @JoinColumn(name = "USER_ID", nullable = false)
     val user: User,
     @Column(columnDefinition = "TEXT")
-    val input: String?,
+    var input: String?,
     @Column(columnDefinition = "TEXT")
-    val output: String?,
+    var output: String?,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "prob_id")

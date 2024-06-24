@@ -10,15 +10,15 @@ class IOExample(
     var id: Long?,
 
     @Column(columnDefinition = "TEXT")
-    val inputExample: String?,
+    var inputExample: String?,
     @Column(columnDefinition = "TEXT")
-    val outputExample: String?,
+    var outputExample: String?,
     @Column(columnDefinition = "TEXT")
-    val description: String?,
+    var description: String?,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "prob_id")
-    val problem: Problem
+    val problem: Problem,
 )
 
 data class IOExampleDto(

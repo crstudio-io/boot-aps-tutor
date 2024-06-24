@@ -4,6 +4,7 @@ import io.crstudio.tutor.problem.model.IOExampleDto
 import io.crstudio.tutor.problem.model.ProblemDto
 import io.crstudio.tutor.problem.model.TestCaseDto
 import org.springframework.data.domain.Pageable
+import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 
 @RequestMapping("problems")
@@ -17,21 +18,7 @@ class ProblemController(
         dto: ProblemDto
     ) = service.createProblem(dto)
 
-    @PostMapping("{probId}/tests")
-    fun createTestCase(
-        @PathVariable("probId")
-        probId: Long,
-        @RequestBody
-        dto: TestCaseDto,
-    ) = service.addTestCase(probId, dto)
 
-    @PostMapping("{probId}/examples")
-    fun createExample(
-        @PathVariable("probId")
-        probId: Long,
-        @RequestBody
-        dto: IOExampleDto,
-    ) = service.addIoExample(probId, dto)
 
     @GetMapping("{probId}")
     fun readProblem(
@@ -42,7 +29,7 @@ class ProblemController(
     @GetMapping
     fun readProblems(
         pageable: Pageable
-    ) = service.readProblemList(pageable);
+    ) = service.readProblemList(pageable)
 
     @PutMapping("{probId}")
     fun updateProblem(
@@ -53,6 +40,7 @@ class ProblemController(
     ) = service.updateProblem(probId, problemDto)
 
     @DeleteMapping("{probId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     fun deleteProblem(
         @PathVariable("probId")
         probId: Long,

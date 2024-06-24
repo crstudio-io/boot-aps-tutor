@@ -15,8 +15,6 @@ import org.springframework.web.server.ResponseStatusException
 class ProblemService(
     val authFacade: AuthFacade,
     val problemRepo: ProblemRepo,
-    val testCaseRepo: TestCaseRepo,
-    val ioExampleRepo: IOExampleRepo,
 ) {
     // create problem
     fun createProblem(problemDto: ProblemDto) = ProblemDto.fromEntity(
@@ -29,34 +27,6 @@ class ProblemService(
                 timeout = problemDto.timeout,
                 memory = problemDto.memory,
                 user = authFacade.getUser()
-            )
-        )
-    )
-
-    // add testcase to problem
-    fun addTestCase(probId: Long, testCaseDto: TestCaseDto) = TestCaseDto.fromEntity(
-        testCaseRepo.save(
-            TestCase(
-                id = null,
-                user = authFacade.getUser(),
-                input = testCaseDto.input,
-                output = testCaseDto.output,
-                problem = problemRepo.findByIdOrNull(probId)
-                    ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
-            )
-        )
-    )
-
-    // add io example to problem
-    fun addIoExample(probId: Long, ioExampleDto: IOExampleDto) = IOExampleDto.fromEntity(
-        ioExampleRepo.save(
-            IOExample(
-                id = null,
-                inputExample = ioExampleDto.inputExample,
-                outputExample = ioExampleDto.outputExample,
-                description = ioExampleDto.description,
-                problem = problemRepo.findByIdOrNull(probId)
-                    ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
             )
         )
     )
@@ -88,12 +58,13 @@ class ProblemService(
         return ProblemDto.fromEntity(problemRepo.save(problem))
     }
 
+    // delete problem
     fun deleteProblem(probId: Long) {
         val problem = problemRepo.findByIdOrNull(probId)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
         val user = authFacade.getUser()
         if (problem.user != user)
             throw ResponseStatusException(HttpStatus.FORBIDDEN)
-        problemRepo.deleteById(probId)
+        problemRepo.delete(problem)
     }
 }
