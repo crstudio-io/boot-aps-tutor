@@ -15,7 +15,7 @@ class SolutionController(
         probId: Long,
         @RequestBody
         dto: SolutionDto
-    ) = service.createSolution(1, probId, dto)
+    ) = service.createSolution(probId, dto)
 
     @GetMapping("{solId}")
     fun getSolution(
@@ -31,7 +31,7 @@ class SolutionController(
         @PathVariable("probId")
         probId: Long,
         pageable: Pageable
-    ) = service.findSolutionByUser(probId, 1, pageable)
+    ) = service.findSolutionByMe(probId, pageable)
 
     @GetMapping
     fun getProblemSolutions(
@@ -39,5 +39,4 @@ class SolutionController(
         probId: Long,
         pageable: Pageable
     ) = service.findSolutionByProblem(probId, pageable)
-
 }

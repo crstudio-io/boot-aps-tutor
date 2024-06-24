@@ -25,7 +25,6 @@ class SolutionTests {
     @DisplayName("create solution")
     fun createSolution() {
         val solutionDto = solutionService.createSolution(
-            userId = 1,
             probId = 1,
             solutionDto = SolutionDto(
                 null,
