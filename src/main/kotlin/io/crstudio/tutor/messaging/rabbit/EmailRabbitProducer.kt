@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.thymeleaf.context.Context
 import org.thymeleaf.spring6.SpringTemplateEngine
-import kotlin.io.path.Path
 
 @Component
 class EmailRabbitProducer(
@@ -22,7 +21,7 @@ class EmailRabbitProducer(
     val templateEngine: SpringTemplateEngine,
     @Value("\${service.host}")
     private val serviceHost: String,
-): EmailProducer {
+) : EmailProducer {
     override fun signInEmail(params: SignInMailParams) {
         val context = Context()
         context.setVariable("serviceHost", serviceHost)

@@ -14,7 +14,7 @@ class IdBasedProxyAuthentication<P, ID>(
     authorities: Collection<GrantedAuthority>,
     private val userId: ID,
     private val userProxy: UserIdProxy<P, ID>,
-): AbstractAuthenticationToken(
+) : AbstractAuthenticationToken(
     authorities
 ) {
     val user: P by lazy {

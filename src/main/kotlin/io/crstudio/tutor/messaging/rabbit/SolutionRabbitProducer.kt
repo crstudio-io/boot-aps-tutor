@@ -14,7 +14,8 @@ class SolutionRabbitProducer(
     @Qualifier("solutionQueue")
     val jobQueue: Queue,
     val rabbitTemplate: RabbitTemplate,
-): SolutionProducer {
+) : SolutionProducer {
     override fun sendPayload(gradePayload: GradePayload) = rabbitTemplate.convertAndSend(
-        jobQueue.name, Json.encodeToString(gradePayload))
+        jobQueue.name, Json.encodeToString(gradePayload)
+    )
 }

@@ -14,17 +14,17 @@ import org.springframework.web.filter.OncePerRequestFilter
 class JwtFilter(
     private val userRepo: UserRepo,
     private val jwtUtils: JwtUtils,
-): OncePerRequestFilter(){
+) : OncePerRequestFilter() {
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        filterChain: FilterChain
+        filterChain: FilterChain,
     ) {
         val authHeader = request.getHeader(HttpHeaders.AUTHORIZATION)
             ?: run {
-            filterChain.doFilter(request, response)
-            return
-        }
+                filterChain.doFilter(request, response)
+                return
+            }
         if (!authHeader.startsWith("Bearer ") || authHeader.length < 8) {
             filterChain.doFilter(request, response)
             return
