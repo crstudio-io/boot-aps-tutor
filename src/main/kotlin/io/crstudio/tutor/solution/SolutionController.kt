@@ -2,6 +2,7 @@ package io.crstudio.tutor.solution
 
 import io.crstudio.tutor.solution.model.SolutionDto
 import org.springframework.data.domain.Pageable
+import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -18,7 +19,8 @@ class SolutionController(
     fun createSolution(
         @PathVariable("probId")
         probId: Long,
-        @RequestBody dto: SolutionDto
+        @RequestBody
+        dto: SolutionDto
     ) = service.createSolution(1, probId, dto)
 
     @GetMapping("solution/{solId}")
