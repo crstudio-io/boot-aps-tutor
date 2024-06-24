@@ -46,12 +46,13 @@ class SolutionService(
         return SolutionDto.fromEntity(solution, true)
     }
 
-    fun findSolution(solutionId: Long) =
-        SolutionDto.fromEntity(
-            solutionRepo.findByIdOrNull(solutionId)
-                ?: throw ResponseStatusException(HttpStatus.NOT_FOUND),
-            false
-        )
+    fun findSolution(probId:Long, solutionId: Long): SolutionDto {
+        val solution = solutionRepo.findByIdOrNull(solutionId)
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
+        if (solution.problem.id != probId)
+            throw ResponseStatusException(HttpStatus.NOT_FOUND)
+        return SolutionDto.fromEntity(solution, false)
+    }
 
     fun findSolutionByMe(probId: Long, pageable: Pageable = PageRequest.of(0, 10)) =
         solutionRepo.findAllByUserId(authFacade.getUser().id!!, pageable).map(SolutionDto::fromEntity)

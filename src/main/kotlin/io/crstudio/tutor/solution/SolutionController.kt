@@ -19,12 +19,11 @@ class SolutionController(
 
     @GetMapping("{solId}")
     fun getSolution(
-        @PathVariable("probId")
-        probId: Long,
         @PathVariable("solId")
         solId: Long,
-        pageable: Pageable
-    ) = service.findSolution(solId)
+        @PathVariable("probId")
+        probId: Long,
+    ) = service.findSolution(probId, solId)
 
     @GetMapping("me")
     fun getSolutionByMe(
