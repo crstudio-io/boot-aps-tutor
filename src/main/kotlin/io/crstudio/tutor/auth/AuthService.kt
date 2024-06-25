@@ -22,17 +22,16 @@ class AuthService(
     val userRepo: UserRepo,
     val jwtUtils: JwtUtils,
     val emailProducer: EmailProducer,
-    @Value("\${service.token-front:/auth/signin}")
+    @Value("\${service.token-front}")
     val tokenPath: String,
-    signInTemplate: RedisTemplate<String, Long>,
     signInHashTemplate: RedisTemplate<String, SignInSession>,
 ) {
-    private final val signInOps: ValueOperations<String, Long>
     private final val signInHashOps: ValueOperations<String, SignInSession>
+
     init {
-        signInOps = signInTemplate.opsForValue()
         signInHashOps = signInHashTemplate.opsForValue()
     }
+
     private final val logger = LoggerFactory.getLogger(this.javaClass)
 
     fun requestSignIn(jwtRequestDto: JwtRequestDto) {
@@ -40,35 +39,30 @@ class AuthService(
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
         val token = UUID.randomUUID().toString()
             .replace("-", "")
-//        signInOps.set("tutor-signin-$token", user.id!!, 10, TimeUnit.MINUTES)
         signInHashOps.set("tutor-signin-$token", SignInSession(user.id!!), 10, TimeUnit.MINUTES)
         logger.debug("issuing session for ${user.id} - $token")
-        emailProducer.signInEmail(SignInMailParams(
-            email = user.email!!,
-            link = "$tokenPath?token=$token",
-        ))
+        emailProducer.signInEmail(
+            SignInMailParams(
+                email = user.email!!,
+                link = "$tokenPath?token=$token",
+            )
+        )
     }
-
-//    fun finalizeSignIn(token: String): String {
-//        val userId = signInOps.getAndDelete("tutor-signin-$token")
-//            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
-//        if(!userRepo.existsById(userId))
-//            throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)
-//        val jwt = jwtUtils.generateToken(userId)
-//        logger.debug("issue jwt for: $userId - $jwt")
-//        return jwt
-//    }
 
     @Transactional
     fun finalizeSignIn(token: String): String {
         val signInSession = signInHashOps.get("tutor-signin-$token")
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
         val userId = signInSession.userId
-        if (signInSession.getIssued()) return signInSession.retrieveToken()
+        if (signInSession.getIssued()) {
+            logger.debug("use pre-issued jwt")
+            return signInSession.getToken()
+                ?: throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "null token")
+        }
         val jwt = jwtUtils.generateToken(userId)
         logger.debug("issue jwt for: $userId - $jwt")
         signInSession.issueToken(jwt)
-        signInHashOps.setIfPresent(token, signInSession, 1, TimeUnit.MINUTES)
+        signInHashOps.setIfPresent("tutor-signin-$token", signInSession, 1, TimeUnit.MINUTES)
         return jwt
     }
 }
