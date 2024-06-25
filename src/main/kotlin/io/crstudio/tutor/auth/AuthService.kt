@@ -6,6 +6,7 @@ import io.crstudio.tutor.auth.repo.UserRepo
 import io.crstudio.tutor.messaging.EmailProducer
 import io.crstudio.tutor.messaging.model.SignInMailParams
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.core.ValueOperations
 import org.springframework.http.HttpStatus
@@ -19,6 +20,8 @@ class AuthService(
     val userRepo: UserRepo,
     val jwtUtils: JwtUtils,
     val emailProducer: EmailProducer,
+    @Value("\${service.token-front:/auth/signin}")
+    val tokenPath: String,
     signInTemplate: RedisTemplate<String, Long>,
 ) {
     private final val signInOps: ValueOperations<String, Long>
@@ -36,7 +39,7 @@ class AuthService(
         logger.debug("issuing session for ${user.id} - $token")
         emailProducer.signInEmail(SignInMailParams(
             email = user.email!!,
-            link = "/auth/signin?token=$token",
+            link = "$tokenPath?token=$token",
         ))
     }
 

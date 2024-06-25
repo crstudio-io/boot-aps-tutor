@@ -3,4 +3,9 @@ spring:
     active: dev
 
 jwt:
-  secret: aaaabbbsdifqbvaesoioegwaaaabbbsdifqbvaesoioegwaaaabbbsdifqbvaes
+  secret: ${JWT_SECRET}
+
+service:
+  host: ${SERVICE_HOST}
+  #  frontend path to request jwt from
+  token-front: ${FRONT_TOKEN_PATH}

@@ -15,6 +15,9 @@ spring:
     redis:
       username: default
       password: systempass
+jwt:
+  secret: aaaabbbsdifqbvaesoioegwaaaabbbsdifqbvaesoioegwaaaabbbsdifqbvaes
 
 service:
   host: http://localhost:8080
+  token-front: /request-signin
