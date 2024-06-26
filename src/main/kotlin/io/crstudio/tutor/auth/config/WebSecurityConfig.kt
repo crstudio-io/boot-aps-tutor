@@ -10,9 +10,9 @@ import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.serializer.RedisSerializer
 import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.config.annotation.web.invoke
 import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.access.intercept.AuthorizationFilter
 
 @Configuration
@@ -27,19 +27,15 @@ class WebSecurityConfig(
                 disable()
             }
             authorizeHttpRequests {
-                authorize(anyRequest, authenticated)
                 authorize("/auth/signin", permitAll)
 //                authorize("/test/auth/authenticated", authenticated)
-                authorize(
-                    HttpMethod.POST,
-                    "/problems/**",
-                    hasAnyRole("ADMIN", "POWER_USER")
-                )
-                authorize(
-                    HttpMethod.POST,
-                    "/problems/**/solutions/**",
-                    hasAnyRole("ADMIN", "POWER_USER", "USER")
-                )
+                authorize(HttpMethod.POST, "/problems/**", hasAnyRole("ADMIN", "POWER_USER"))
+                authorize(HttpMethod.PUT, "/problems/**", hasAnyRole("ADMIN", "POWER_USER"))
+                authorize(HttpMethod.DELETE, "/problems/**", hasAnyRole("ADMIN", "POWER_USER"))
+                authorize("/problems/*/solutions/**", authenticated)
+                authorize(HttpMethod.GET, "/problems", permitAll)
+                authorize(HttpMethod.GET, "/problems/*", permitAll)
+                authorize(anyRequest, authenticated)
             }
             sessionManagement {
                 sessionCreationPolicy = SessionCreationPolicy.STATELESS
