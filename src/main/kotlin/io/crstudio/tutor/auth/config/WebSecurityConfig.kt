@@ -8,9 +8,11 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.serializer.RedisSerializer
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.config.annotation.web.invoke
+import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.access.intercept.AuthorizationFilter
 
 @Configuration
@@ -20,22 +22,31 @@ class WebSecurityConfig(
 ) {
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
-        http
-            .csrf { csrf ->
-                csrf.disable()
+        http {
+            csrf {
+                disable()
             }
-            .authorizeHttpRequests { auth ->
-                auth.requestMatchers("/auth/signin").permitAll()
-                auth.requestMatchers("/test/auth/authenticated").authenticated()
-                auth.requestMatchers("/problems/**").authenticated()
+            authorizeHttpRequests {
+                authorize(anyRequest, authenticated)
+                authorize("/auth/signin", permitAll)
+//                authorize("/test/auth/authenticated", authenticated)
+                authorize(
+                    HttpMethod.POST,
+                    "/problems/**",
+                    hasAnyRole("ADMIN", "POWER_USER")
+                )
+                authorize(
+                    HttpMethod.POST,
+                    "/problems/**/solutions/**",
+                    hasAnyRole("ADMIN", "POWER_USER", "USER")
+                )
             }
-            .sessionManagement { session ->
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            sessionManagement {
+                sessionCreationPolicy = SessionCreationPolicy.STATELESS
             }
-            .addFilterBefore(
-                JwtFilter(userRepo, jwtUtils),
-                AuthorizationFilter::class.java
-            )
+//            addFilterBefore(JwtFilter(userRepo, jwtUtils), AuthorizationFilter::class.java)
+            addFilterBefore<AuthorizationFilter>(JwtFilter(userRepo, jwtUtils))
+        }
 
         return http.build()
     }
