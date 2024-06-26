@@ -29,10 +29,10 @@ class WebSecurityConfig(
             authorizeHttpRequests {
                 authorize("/auth/signin", permitAll)
 //                authorize("/test/auth/authenticated", authenticated)
+                authorize("/problems/*/solutions/**", authenticated)
                 authorize(HttpMethod.POST, "/problems/**", hasAnyRole("ADMIN", "POWER_USER"))
                 authorize(HttpMethod.PUT, "/problems/**", hasAnyRole("ADMIN", "POWER_USER"))
                 authorize(HttpMethod.DELETE, "/problems/**", hasAnyRole("ADMIN", "POWER_USER"))
-                authorize("/problems/*/solutions/**", authenticated)
                 authorize(HttpMethod.GET, "/problems", permitAll)
                 authorize(HttpMethod.GET, "/problems/*", permitAll)
                 authorize(anyRequest, authenticated)
