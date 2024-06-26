@@ -1,8 +1,13 @@
 package io.crstudio.tutor.auth.config
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 class SignInSession(
+    @JsonProperty("userId")
     val userId: Long,
+    @JsonProperty("issued")
     private var issued: Boolean = false,
+    @JsonProperty("token")
     private var token: String? = null,
 ) {
     // TODO maybe record some info to prevent remote jwt issue?
@@ -12,6 +17,5 @@ class SignInSession(
     }
 
     fun getIssued() = issued
-    fun retrieveToken(): String = token
-        ?: throw IllegalStateException("Token is null")
+    fun getToken(): String? = token
 }

@@ -52,15 +52,6 @@ class WebSecurityConfig(
     }
 
     @Bean
-    fun signInSessionTemplate(connectionFactory: RedisConnectionFactory): RedisTemplate<String, Long> {
-        val template = RedisTemplate<String, Long>()
-        template.connectionFactory = connectionFactory
-        template.keySerializer = RedisSerializer.string()
-        template.valueSerializer = RedisSerializer.java()
-        return template
-    }
-
-    @Bean
     fun signInHashTemplate(connectionFactory: RedisConnectionFactory): RedisTemplate<String, SignInSession> {
         val template = RedisTemplate<String, SignInSession>()
         template.connectionFactory = connectionFactory
