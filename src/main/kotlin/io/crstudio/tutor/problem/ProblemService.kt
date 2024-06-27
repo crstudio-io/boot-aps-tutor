@@ -20,6 +20,7 @@ class ProblemService(
         problemRepo.save(
             Problem(
                 id = null,
+                title = problemDto.title,
                 probDesc = problemDto.probDesc,
                 inputDesc = problemDto.inputDesc,
                 outputDesc = problemDto.outputDesc,
