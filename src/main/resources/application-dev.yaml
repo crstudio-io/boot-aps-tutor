@@ -28,5 +28,6 @@ jwt:
 
 service:
   host: http://localhost:8080
+  front-host: http://localhost:3000
   #  frontend path to request jwt from
   token-front: /request-signin
