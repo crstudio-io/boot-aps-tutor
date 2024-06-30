@@ -22,6 +22,8 @@ class AuthService(
     val userRepo: UserRepo,
     val jwtUtils: JwtUtils,
     val emailProducer: EmailProducer,
+    @Value("\${service.front-host}")
+    val frontHost: String,
     @Value("\${service.token-front}")
     val tokenPath: String,
     signInHashTemplate: RedisTemplate<String, SignInSession>,
@@ -44,7 +46,8 @@ class AuthService(
         emailProducer.signInEmail(
             SignInMailParams(
                 email = user.email!!,
-                link = "$tokenPath?token=$token",
+                host = frontHost,
+                link = "$frontHost$tokenPath?token=$token",
             )
         )
     }

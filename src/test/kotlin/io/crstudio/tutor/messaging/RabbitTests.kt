@@ -18,7 +18,7 @@ import org.thymeleaf.spring6.SpringTemplateEngine
 
 @SpringBootTest
 @ActiveProfiles("test")
-class RabbitTests{
+class RabbitTests {
     @Autowired
     lateinit var templateEngine: SpringTemplateEngine
 
@@ -29,9 +29,10 @@ class RabbitTests{
     @DisplayName("solution mq standalone")
     fun testSolutionMessage(
         @Qualifier("solutionQueue")
-        queue : Queue
+        queue: Queue,
     ) {
-        val code = "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello World!\");\n    }\n}"
+        val code =
+            "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello World!\");\n    }\n}"
         val payload = GradePayload(0, 0, code)
 
         rabbitTemplate.convertAndSend(queue.name, Json.encodeToString(payload))
@@ -41,9 +42,10 @@ class RabbitTests{
     @DisplayName("solution producer")
     fun testSolutionProducer(
         @Autowired
-        solutionProducer: SolutionProducer
+        solutionProducer: SolutionProducer,
     ) {
-        val code = "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello World!\");\n    }\n}"
+        val code =
+            "public class Main {\n    public static void main(String[] args) {\n        System.out.println(\"Hello World!\");\n    }\n}"
         solutionProducer.sendPayload(GradePayload(0, 0, code))
     }
 
@@ -62,7 +64,7 @@ class RabbitTests{
     @DisplayName("email mq standalone")
     fun testEmailMessage(
         @Qualifier("emailSenderQueue")
-        queue : Queue
+        queue: Queue,
     ) {
         val payload = EmailRabbitProducer.Payload(
             subject = "test",
@@ -76,12 +78,13 @@ class RabbitTests{
     @DisplayName("email producer - signin")
     fun testSignInEmail(
         @Autowired
-        emailProducer: EmailProducer
+        emailProducer: EmailProducer,
     ) = emailProducer.signInEmail(
         SignInMailParams(
-        "aquashdw@gmail.com",
-        "/link"
-    )
+            "aquashdw@gmail.com",
+            "http://localhost:8080",
+            "http://localhost:8080"
+        )
     )
 
 }

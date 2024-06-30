@@ -8,7 +8,6 @@ import kotlinx.serialization.json.Json
 import org.springframework.amqp.core.Queue
 import org.springframework.amqp.rabbit.core.RabbitTemplate
 import org.springframework.beans.factory.annotation.Qualifier
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.thymeleaf.context.Context
 import org.thymeleaf.spring6.SpringTemplateEngine
@@ -19,14 +18,12 @@ class EmailRabbitProducer(
     val jobQueue: Queue,
     val rabbitTemplate: RabbitTemplate,
     val templateEngine: SpringTemplateEngine,
-    @Value("\${service.host}")
-    private val serviceHost: String,
 ) : EmailProducer {
     override fun signInEmail(params: SignInMailParams) {
         val context = Context()
-        context.setVariable("serviceHost", serviceHost)
+        context.setVariable("serviceHost", params.host)
         context.setVariable("email", params.email)
-        context.setVariable("signInLink", "$serviceHost${params.link}")
+        context.setVariable("signInLink", params.link)
         val htmlBody = templateEngine.process("email/signin", context)
         val payload = Payload(
             subject = "Sign In Request",
