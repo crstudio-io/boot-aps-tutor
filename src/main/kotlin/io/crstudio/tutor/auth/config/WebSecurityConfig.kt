@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.serializer.RedisSerializer
+import org.springframework.data.redis.serializer.StringRedisSerializer
 import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.invoke
@@ -56,24 +57,24 @@ class WebSecurityConfig(
         return http.build()
     }
 
+
     @Bean
-    fun signInHashTemplate(connectionFactory: RedisConnectionFactory): RedisTemplate<String, SignInSession> {
-        val template = RedisTemplate<String, SignInSession>()
-        template.connectionFactory = connectionFactory
-        template.keySerializer = RedisSerializer.string()
-        template.valueSerializer = RedisSerializer.json()
-        template.setEnableTransactionSupport(true)
-        return template
+    fun signInHashTemplate(connectionFactory: RedisConnectionFactory): RedisTemplate<String, SignInSession> = RedisTemplate<String, SignInSession>().apply {
+        setConnectionFactory(connectionFactory)
+        keySerializer = RedisSerializer.string()
+        valueSerializer = RedisSerializer.json()
+        setEnableTransactionSupport(true)
     }
 
     @Bean
-    fun corsConfigurationSource(): CorsConfigurationSource {
-        val configuration = CorsConfiguration()
-        configuration.allowedOrigins = listOf(frontOrigin)
-        configuration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE")
-        configuration.allowedHeaders = listOf("*")
-        val source = UrlBasedCorsConfigurationSource()
-        source.registerCorsConfiguration("/**", configuration)
-        return source
+    fun corsConfigurationSource(): CorsConfigurationSource = UrlBasedCorsConfigurationSource().apply {
+        registerCorsConfiguration("/**", corsConfiguration())
+    }
+
+    @Bean
+    fun corsConfiguration(): CorsConfiguration = CorsConfiguration().apply {
+        allowedOrigins = listOf(frontOrigin)
+        allowedMethods = listOf("GET", "POST", "PUT", "DELETE")
+        allowedHeaders = listOf("*")
     }
 }
