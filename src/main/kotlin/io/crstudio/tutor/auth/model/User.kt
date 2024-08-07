@@ -18,6 +18,16 @@ class User(
     val roles: MutableSet<Role> = mutableSetOf(),
 )
 
+data class UserDto(
+    var email: String?,
+) {
+    companion object {
+        fun fromEntity(entity: User): UserDto = UserDto(
+            email = entity.email,
+        )
+    }
+}
+
 @Entity
 @Table(name = "ROLE_TABLE")
 class Role(

@@ -11,7 +11,8 @@ values (1, E'Hello, World!\n', E'Hello, World!\n', 1),
        (1, E'Goodbye\n', E'Goodbye\n', 1);
 
 insert into IO_EXAMPLE(input_example, output_example, description, prob_id)
-values (E'Hello, World!\n', E'Hello, World!\n', null, 1);
+values (E'Hello, World!\n', E'Hello, World!\n', null, 1),
+       (E'CRStudio\n', E'CRStudio\n', null, 1);
 
 insert into SOLUTION(prob_id, user_id, lang, status, score, code)
 values (1, 1, 'JAVA17', 'SUCCESS', 100, E'import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        System.out.println(scanner.nextLine());\n    }\n}');

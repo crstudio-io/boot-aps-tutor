@@ -37,6 +37,7 @@ class WebSecurityConfig(
                 configurationSource = corsConfigurationSource()
             }
             authorizeHttpRequests {
+                authorize("/error", permitAll)
                 authorize("/auth/signin", permitAll)
 //                authorize("/test/auth/authenticated", authenticated)
                 authorize("/problems/*/solutions/**", authenticated)
