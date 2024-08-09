@@ -15,4 +15,7 @@ values (E'Hello, World!\n', E'Hello, World!\n', null, 1),
        (E'CRStudio\n', E'CRStudio\n', null, 1);
 
 insert into SOLUTION(prob_id, user_id, lang, status, score, code)
-values (1, 1, 'JAVA17', 'SUCCESS', 100, E'import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        System.out.println(scanner.nextLine());\n    }\n}');
+values (1, 1, 'JAVA17', 'ERROR', 0, E'import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        System.out.println(scanner.nextLine());\n    }\n}'),
+       (1, 1, 'JAVA17', 'FAIL', 33, E'import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        System.out.println(scanner.nextLine());\n    }\n}'),
+       (1, 1, 'JAVA17', 'SUCCESS', 100, E'import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        System.out.println(scanner.nextLine());\n    }\n}');
+
