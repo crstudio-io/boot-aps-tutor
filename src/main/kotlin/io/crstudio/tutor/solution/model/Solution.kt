@@ -42,6 +42,7 @@ data class SolutionDto(
     val code: String,
     val status: Status?,
     val score: Int?,
+    val username: String?
 ) {
     companion object {
         fun fromEntity(solution: Solution, omitCode: Boolean = true) = SolutionDto(
@@ -50,6 +51,7 @@ data class SolutionDto(
             code = if (omitCode) "**omitted**" else solution.code,
             status = solution.status,
             score = solution.score,
+            username = solution.user.email,
         )
     }
 }
