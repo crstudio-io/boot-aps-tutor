@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface SolutionRepo : JpaRepository<Solution, Long> {
     fun findAllByUserId(userId: Long, pageable: Pageable): Page<Solution>
+    fun findAllByUserIdAndProblemId(userId: Long, probId: Long, pageable: Pageable): Page<Solution>
     fun findAllByProblemId(probId: Long, pageable: Pageable): Page<Solution>
 }

@@ -54,8 +54,8 @@ class SolutionService(
         return SolutionDto.fromEntity(solution, false)
     }
 
-    fun findSolutionByMe(probId: Long, pageable: Pageable = PageRequest.of(0, 10)) =
-        solutionRepo.findAllByUserId(authFacade.getUser().id!!, pageable).map(SolutionDto::fromEntity)
+    fun findProbSolutionByMe(probId: Long, pageable: Pageable = PageRequest.of(0, 10)) =
+        solutionRepo.findAllByUserIdAndProblemId(authFacade.getUser().id!!, probId, pageable).map(SolutionDto::fromEntity)
 
     fun findSolutionByProblem(probId: Long, pageable: Pageable = PageRequest.of(0, 10)) =
         solutionRepo.findAllByProblemId(probId, pageable).map(SolutionDto::fromEntity)
