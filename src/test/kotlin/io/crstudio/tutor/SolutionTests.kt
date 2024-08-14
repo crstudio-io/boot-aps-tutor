@@ -37,7 +37,8 @@ class SolutionTests {
                 }
                 """.trimIndent(),
                 null,
-                null
+                null,
+                null,
             )
         )
 
