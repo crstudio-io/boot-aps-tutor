@@ -31,3 +31,4 @@ service:
   front-host: http://localhost:3000
   #  frontend path to request jwt from
   token-front: /request-signin
+  signup-front: /signup/verify

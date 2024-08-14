@@ -7,8 +7,13 @@ import jakarta.persistence.*
 class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long?,
+    var id: Long? = null,
+    @Column(unique = true)
     val email: String?,
+    val active: Boolean = false,
+    var reqAccepted: Boolean = false,
+    @Column(columnDefinition = "TEXT")
+    val request: String,
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "USER_ROLES",

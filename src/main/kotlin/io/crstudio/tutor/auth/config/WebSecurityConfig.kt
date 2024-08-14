@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.serializer.RedisSerializer
-import org.springframework.data.redis.serializer.StringRedisSerializer
 import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.invoke
@@ -38,6 +37,7 @@ class WebSecurityConfig(
             }
             authorizeHttpRequests {
                 authorize("/error", permitAll)
+                authorize("/auth/signup/**", permitAll)
                 authorize("/auth/signin", permitAll)
 //                authorize("/test/auth/authenticated", authenticated)
                 authorize("/problems/*/solutions/**", authenticated)
@@ -60,7 +60,15 @@ class WebSecurityConfig(
 
 
     @Bean
-    fun signInHashTemplate(connectionFactory: RedisConnectionFactory): RedisTemplate<String, SignInSession> = RedisTemplate<String, SignInSession>().apply {
+    fun signInTemplate(connectionFactory: RedisConnectionFactory): RedisTemplate<String, SignInSession> = RedisTemplate<String, SignInSession>().apply {
+        setConnectionFactory(connectionFactory)
+        keySerializer = RedisSerializer.string()
+        valueSerializer = RedisSerializer.json()
+        setEnableTransactionSupport(true)
+    }
+
+    @Bean
+    fun signUpTemplate(connectionFactory: RedisConnectionFactory): RedisTemplate<String, SignUpSession> = RedisTemplate<String, SignUpSession>().apply {
         setConnectionFactory(connectionFactory)
         keySerializer = RedisSerializer.string()
         valueSerializer = RedisSerializer.json()

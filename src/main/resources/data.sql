@@ -1,4 +1,4 @@
-insert into USER_TABLE(email) values ('aquashdw@gmail.com'), ('jeeho.dev@gmail.com');
+insert into USER_TABLE(email, active, req_accepted) values ('aquashdw@gmail.com', TRUE, TRUE), ('jeeho.dev@gmail.com', TRUE, TRUE);
 insert into ROLE_TABLE(name) values ('ADMIN'), ('MAINTAINER'), ('USER');
 insert into USER_ROLES(user_id, role_id) values (1, 1), (2, 3);
 

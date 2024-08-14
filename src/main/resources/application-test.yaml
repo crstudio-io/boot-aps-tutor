@@ -22,3 +22,4 @@ service:
   host: http://localhost:8080
   front-host: http://localhost:3000
   token-front: /request-signin
+  signup-front: /signup/verify

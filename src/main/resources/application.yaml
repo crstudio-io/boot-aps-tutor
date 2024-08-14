@@ -10,3 +10,4 @@ service:
   #  frontend path to request jwt from
   front-host: ${FRONT_HOST}
   token-front: ${FRONT_TOKEN_PATH}
+  signup-front: ${FRONT_SIGNUP_PATH}
