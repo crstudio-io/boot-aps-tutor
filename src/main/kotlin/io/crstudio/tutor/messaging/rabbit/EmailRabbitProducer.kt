@@ -2,6 +2,7 @@ package io.crstudio.tutor.messaging.rabbit
 
 import io.crstudio.tutor.messaging.EmailProducer
 import io.crstudio.tutor.messaging.model.SignInMailParams
+import io.crstudio.tutor.messaging.model.SignUpMailParams
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -31,6 +32,21 @@ class EmailRabbitProducer(
             to = listOf(params.email)
         )
         rabbitTemplate.convertAndSend(jobQueue.name, Json.encodeToString(payload))
+    }
+
+    override fun signUpEmail(params: SignUpMailParams) {
+        val context = Context()
+        context.setVariable("serviceHost", params.host)
+        context.setVariable("email", params.email)
+        context.setVariable("signUpLink", params.link)
+        val htmlBody = templateEngine.process("email/signup", context)
+        val payload = Payload(
+            subject = "Sign Up Request",
+            body = htmlBody,
+            to = listOf(params.email)
+        )
+        rabbitTemplate.convertAndSend(jobQueue.name, Json.encodeToString(payload))
+
     }
 
     @Serializable

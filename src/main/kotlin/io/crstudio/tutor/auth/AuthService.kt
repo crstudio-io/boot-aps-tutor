@@ -8,6 +8,8 @@ import io.crstudio.tutor.auth.jwt.JwtUtils
 import io.crstudio.tutor.auth.model.User
 import io.crstudio.tutor.auth.repo.UserRepo
 import io.crstudio.tutor.messaging.EmailProducer
+import io.crstudio.tutor.messaging.model.SignInMailParams
+import io.crstudio.tutor.messaging.model.SignUpMailParams
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.redis.core.RedisTemplate
@@ -48,14 +50,14 @@ class AuthService(
             .replace("-", "")
         signInOps.set("tutor-signin-$token", SignInSession(user.id!!), 10, TimeUnit.MINUTES)
         logger.debug("issuing session for ${user.id} - $token")
-//        emailProducer.signInEmail(
-//            SignInMailParams(
-//                email = user.email!!,
-//                host = frontHost,
-//                link = "$frontHost$tokenPath?token=$token",
-//            )
-//        )
-        logger.debug("$frontHost$tokenPath?token=$token")
+        emailProducer.signInEmail(
+            SignInMailParams(
+                email = user.email!!,
+                host = frontHost,
+                link = "$frontHost$tokenPath?token=$token",
+            )
+        )
+        logger.debug("signin link: $frontHost$tokenPath?token=$token")
     }
 
     @Transactional
@@ -78,28 +80,32 @@ class AuthService(
     fun requestSignUp(signUpRequestDto: SignUpRequestDto) {
         if (userRepo.existsByEmail(signUpRequestDto.email))
             throw ResponseStatusException(HttpStatus.FORBIDDEN, "Already signed up")
-        val user = userRepo.save(User(
-            email = signUpRequestDto.email,
-            active = false,
-            reqAccepted = false,
-            request = signUpRequestDto.request,
-        ))
+        val user = userRepo.save(
+            User(
+                email = signUpRequestDto.email,
+                active = false,
+                reqAccepted = false,
+                request = signUpRequestDto.request,
+            )
+        )
         val token = UUID.randomUUID().toString()
             .replace("-", "")
-        signUpOps.set("tutor-signup-$token", SignUpSession(
-            userId = user.id!!,
-            email = signUpRequestDto.email,
-            request = signUpRequestDto.request
-        ), 10, TimeUnit.MINUTES)
+        signUpOps.set(
+            "tutor-signup-$token", SignUpSession(
+                userId = user.id!!,
+                email = signUpRequestDto.email,
+                request = signUpRequestDto.request
+            ), 10, TimeUnit.MINUTES
+        )
         logger.debug("signup session for ${signUpRequestDto.email}")
-//        emailProducer.signUpEmail(
-//            SignUpMailParams(
-//                email = user.email!!,
-//                host = frontHost,
-//                link = "$frontHost$tokenPath?token=$token",
-//            )
-//        )
-        logger.debug("$frontHost$signUpPath?token=$token")
+        emailProducer.signUpEmail(
+            SignUpMailParams(
+                email = user.email!!,
+                host = frontHost,
+                link = "$frontHost$signUpPath?token=$token",
+            )
+        )
+        logger.debug("signup link: $frontHost$signUpPath?token=$token")
     }
 
     @Transactional
