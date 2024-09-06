@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ResponseStatusException
 
 @Service
@@ -23,6 +24,7 @@ class SolutionService(
     val solutionProducer: SolutionProducer,
 ) {
     // create solution
+    @Transactional
     fun createSolution(probId: Long, solutionDto: SolutionDto): SolutionDto {
         // record to database
         val solution = solutionRepo.save(

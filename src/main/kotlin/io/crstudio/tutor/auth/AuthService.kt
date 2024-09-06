@@ -41,6 +41,7 @@ class AuthService(
 
     private final val logger = LoggerFactory.getLogger(this.javaClass)
 
+    @Transactional
     fun requestSignIn(jwtRequestDto: JwtRequestDto) {
         val user = userRepo.findByEmail(jwtRequestDto.email)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
@@ -50,13 +51,13 @@ class AuthService(
             .replace("-", "")
         signInOps.set("tutor-signin-$token", SignInSession(user.id!!), 10, TimeUnit.MINUTES)
         logger.debug("issuing session for ${user.id} - $token")
-        emailProducer.signInEmail(
-            SignInMailParams(
-                email = user.email!!,
-                host = frontHost,
-                link = "$frontHost$tokenPath?token=$token",
-            )
-        )
+//        emailProducer.signInEmail(
+//            SignInMailParams(
+//                email = user.email!!,
+//                host = frontHost,
+//                link = "$frontHost$tokenPath?token=$token",
+//            )
+//        )
         logger.debug("signin link: $frontHost$tokenPath?token=$token")
     }
 
@@ -77,6 +78,7 @@ class AuthService(
         return jwt
     }
 
+    @Transactional
     fun requestSignUp(signUpRequestDto: SignUpRequestDto) {
         if (userRepo.existsByEmail(signUpRequestDto.email))
             throw ResponseStatusException(HttpStatus.FORBIDDEN, "Already signed up")
@@ -98,13 +100,13 @@ class AuthService(
             ), 10, TimeUnit.MINUTES
         )
         logger.debug("signup session for ${signUpRequestDto.email}")
-        emailProducer.signUpEmail(
-            SignUpMailParams(
-                email = user.email!!,
-                host = frontHost,
-                link = "$frontHost$signUpPath?token=$token",
-            )
-        )
+//        emailProducer.signUpEmail(
+//            SignUpMailParams(
+//                email = user.email!!,
+//                host = frontHost,
+//                link = "$frontHost$signUpPath?token=$token",
+//            )
+//        )
         logger.debug("signup link: $frontHost$signUpPath?token=$token")
     }
 
