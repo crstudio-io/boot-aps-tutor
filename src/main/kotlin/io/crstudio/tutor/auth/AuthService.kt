@@ -16,6 +16,8 @@ import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.core.ValueOperations
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
+import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ResponseStatusException
@@ -23,7 +25,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 @Service
-class AuthService(
+class AuthService (
     val userRepo: UserRepo,
     val jwtUtils: JwtUtils,
     val emailProducer: EmailProducer,
@@ -35,11 +37,15 @@ class AuthService(
     val signUpPath: String,
     signInHashTemplate: RedisTemplate<String, SignInSession>,
     signUpHashTemplate: RedisTemplate<String, SignUpSession>,
-) {
+) : UserDetailsService{
     private final val signInOps: ValueOperations<String, SignInSession> = signInHashTemplate.opsForValue()
     private final val signUpOps: ValueOperations<String, SignUpSession> = signUpHashTemplate.opsForValue()
 
     private final val logger = LoggerFactory.getLogger(this.javaClass)
+
+    @Override
+    override fun loadUserByUsername(username: String): UserDetails
+            = throw ResponseStatusException(HttpStatus.NOT_IMPLEMENTED)
 
     @Transactional
     fun requestSignIn(jwtRequestDto: JwtRequestDto) {
