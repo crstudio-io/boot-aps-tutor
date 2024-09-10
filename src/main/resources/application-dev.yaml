@@ -21,7 +21,7 @@ spring:
       password: systempass
 logging:
   level:
-    io.crstudio.tutor.auth: debug
+    io.crstudio.tutor: debug
 
 jwt:
   secret: aaaabbbsdifqbvaesoioegwaaaabbbsdifqbvaesoioegwaaaabbbsdifqbvaes
