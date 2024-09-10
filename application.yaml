@@ -1,0 +1,27 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    defer-datasource-initialization: true
+  sql:
+    init:
+      mode: always
+  rabbitmq:
+    username: user
+    password: password
+    host: localhost
+  data:
+    redis:
+      username: default
+      password: systempass
+
+jwt:
+  secret: ${JWT_SECRET}
+
+service:
+  host: ${SERVICE_HOST}
+  #  frontend path to request jwt from
+  front-host: ${FRONT_HOST}
+  token-front: ${FRONT_TOKEN_PATH}
+  signup-front: ${FRONT_SIGNUP_PATH}
