@@ -2,6 +2,8 @@ package io.crstudio.tutor.solution
 
 import io.crstudio.tutor.solution.model.SolutionDto
 import org.springframework.data.domain.Pageable
+import org.springframework.data.domain.Sort
+import org.springframework.data.web.PageableDefault
 import org.springframework.web.bind.annotation.*
 
 @RequestMapping("problems/{probId}/solutions")
@@ -21,6 +23,7 @@ class SolutionController(
     fun getProblemSolutions(
         @PathVariable("probId")
         probId: Long,
+        @PageableDefault(size=20, sort = ["id"], direction = Sort.Direction.DESC)
         pageable: Pageable
     ) = service.findSolutionByProblem(probId, pageable)
 
@@ -28,6 +31,7 @@ class SolutionController(
     fun getSolutionByMe(
         @PathVariable("probId")
         probId: Long,
+        @PageableDefault(size=20, sort = ["id"], direction = Sort.Direction.DESC)
         pageable: Pageable
     ) = service.findProbSolutionByMe(probId, pageable)
 
