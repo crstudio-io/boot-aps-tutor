@@ -1,6 +1,7 @@
 package io.crstudio.tutor.auth
 
 import io.crstudio.tutor.auth.dto.JwtRequestDto
+import io.crstudio.tutor.auth.dto.SignUpCodeDto
 import io.crstudio.tutor.auth.dto.SignUpRequestDto
 import io.crstudio.tutor.auth.model.UserDto
 import org.springframework.http.HttpStatus
@@ -18,8 +19,8 @@ class AuthController(
         consumes = [MediaType.APPLICATION_JSON_VALUE]
     )
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun requestSignIn(@RequestBody jwtRequestDto: JwtRequestDto) =
-            authService.requestSignIn(jwtRequestDto)
+    fun requestSignIn(@RequestBody dto: JwtRequestDto) =
+            authService.requestSignIn(dto)
 
     @GetMapping(
         "signin"
@@ -32,8 +33,16 @@ class AuthController(
         consumes = [MediaType.APPLICATION_JSON_VALUE]
     )
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    fun requestSignUp(@RequestBody signUpRequestDto: SignUpRequestDto) =
-            authService.requestSignUp(signUpRequestDto)
+    fun requestSignUp(@RequestBody dto: SignUpRequestDto) =
+            authService.signUpRequest(dto)
+
+    @PostMapping(
+        "signup/code",
+        consumes = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun signUpWithCode(@RequestBody dto: SignUpCodeDto) =
+        authService.signUpCode(dto)
 
     @PostMapping(
         "signup/verify",
