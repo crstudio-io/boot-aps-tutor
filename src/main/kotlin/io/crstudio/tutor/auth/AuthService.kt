@@ -24,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ResponseStatusException
+import org.springframework.web.util.UriComponentsBuilder
 import java.time.LocalDateTime
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -125,15 +126,19 @@ class AuthService (
                 email = email
             ), 10, TimeUnit.MINUTES
         )
+        val linkBuilder =  UriComponentsBuilder.fromHttpUrl("$frontHost$signUpPath")
+            .queryParam("token", token)
+        if (withCode) linkBuilder.queryParam("code")
+
         logger.debug("signup session for ${email}")
         emailProducer.signUpEmail(
             SignUpMailParams(
                 email = email,
                 host = frontHost,
-                link = "$frontHost$signUpPath?token=$token",
+                link = linkBuilder.build().toUriString(),
             )
         )
-        logger.debug("signup link: $frontHost$signUpPath?token=$token")
+        logger.debug("signup link: ${linkBuilder.build().toUriString()}")
     }
 
     @Transactional
