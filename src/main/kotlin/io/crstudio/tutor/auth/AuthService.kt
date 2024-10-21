@@ -5,7 +5,9 @@ import io.crstudio.tutor.auth.config.SignUpSession
 import io.crstudio.tutor.auth.dto.JwtRequestDto
 import io.crstudio.tutor.auth.dto.SignUpRequestDto
 import io.crstudio.tutor.auth.jwt.JwtUtils
+import io.crstudio.tutor.auth.model.SignupRequest
 import io.crstudio.tutor.auth.model.User
+import io.crstudio.tutor.auth.repo.SignUpRepo
 import io.crstudio.tutor.auth.repo.UserRepo
 import io.crstudio.tutor.messaging.EmailProducer
 import io.crstudio.tutor.messaging.model.SignInMailParams
@@ -14,7 +16,6 @@ import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.core.ValueOperations
-import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
@@ -29,6 +30,7 @@ class AuthService (
     val userRepo: UserRepo,
     val jwtUtils: JwtUtils,
     val emailProducer: EmailProducer,
+    val signUpRepo: SignUpRepo,
     @Value("\${service.front-host}")
     val frontHost: String,
     @Value("\${service.token-front}")
@@ -88,27 +90,23 @@ class AuthService (
     fun requestSignUp(signUpRequestDto: SignUpRequestDto) {
         if (userRepo.existsByEmail(signUpRequestDto.email))
             throw ResponseStatusException(HttpStatus.FORBIDDEN, "Already signed up")
-        val user = userRepo.save(
-            User(
-                email = signUpRequestDto.email,
-                active = false,
-                reqAccepted = false,
-                request = signUpRequestDto.request,
-            )
+
+        val signUpRequest = SignupRequest(
+            email = signUpRequestDto.email,
+            request = signUpRequestDto.request,
         )
+        signUpRepo.save(signUpRequest)
         val token = UUID.randomUUID().toString()
             .replace("-", "")
         signUpOps.set(
             "tutor-signup-$token", SignUpSession(
-                userId = user.id!!,
-                email = signUpRequestDto.email,
-                request = signUpRequestDto.request
+                email = signUpRequestDto.email
             ), 10, TimeUnit.MINUTES
         )
         logger.debug("signup session for ${signUpRequestDto.email}")
         emailProducer.signUpEmail(
             SignUpMailParams(
-                email = user.email!!,
+                email = signUpRequestDto.email,
                 host = frontHost,
                 link = "$frontHost$signUpPath?token=$token",
             )
@@ -125,10 +123,20 @@ class AuthService (
             logger.debug("already accepted")
             return
         }
-        val user = userRepo.findByIdOrNull(signUpSession.userId)
+
+        val signUpRequest = signUpRepo.findByEmail(signUpSession.email)
             ?: throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)
-        user.reqAccepted = true
-        userRepo.save(user)
+        signUpRequest.verified = true
+        if (userRepo.existsByEmail(signUpRequest.email)) {
+            return
+        }
+        val user = userRepo.save(User(
+            email = signUpSession.email,
+            active = false,
+            request = signUpRequest.request
+        ))
+        signUpRequest.user = userRepo.save(user)
+        signUpRepo.save(signUpRequest)
         signUpSession.accepted = true
         logger.debug("signup request saved for user: ${signUpSession.email}")
         signUpOps.setIfPresent("tutor-signup-$token", signUpSession, 1, TimeUnit.MINUTES)

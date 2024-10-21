@@ -11,9 +11,8 @@ class User(
     @Column(unique = true)
     val email: String?,
     val active: Boolean = false,
-    var reqAccepted: Boolean = false,
     @Column(columnDefinition = "TEXT")
-    val request: String,
+    val request: String?,
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "USER_ROLES",
@@ -21,6 +20,20 @@ class User(
         inverseJoinColumns = [JoinColumn(name = "ROLE_ID", referencedColumnName = "id")]
     )
     val roles: MutableSet<Role> = mutableSetOf(),
+)
+
+@Entity
+@Table(name = "signup_request")
+class SignupRequest(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null,
+    @Column(unique = true)
+    var email: String,
+    var verified: Boolean = false,
+    val request: String?,
+    @OneToOne(fetch = FetchType.LAZY)
+    var user: User? = null,
 )
 
 data class UserDto(

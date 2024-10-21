@@ -36,6 +36,14 @@ class AuthController(
             authService.requestSignUp(signUpRequestDto)
 
     @PostMapping(
+        "signup/code",
+        consumes = [MediaType.APPLICATION_JSON_VALUE]
+    )
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun signUpWithCode(@RequestBody signUpRequestDto: SignUpRequestDto) =
+        authService.requestSignUp(signUpRequestDto)
+
+    @PostMapping(
         "signup/verify",
         consumes = [MediaType.APPLICATION_JSON_VALUE]
     )
