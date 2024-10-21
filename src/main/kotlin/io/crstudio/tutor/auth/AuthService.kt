@@ -3,10 +3,12 @@ package io.crstudio.tutor.auth
 import io.crstudio.tutor.auth.config.SignInSession
 import io.crstudio.tutor.auth.config.SignUpSession
 import io.crstudio.tutor.auth.dto.JwtRequestDto
+import io.crstudio.tutor.auth.dto.SignUpCodeDto
 import io.crstudio.tutor.auth.dto.SignUpRequestDto
 import io.crstudio.tutor.auth.jwt.JwtUtils
-import io.crstudio.tutor.auth.model.SignupRequest
+import io.crstudio.tutor.auth.model.SignUpRequest
 import io.crstudio.tutor.auth.model.User
+import io.crstudio.tutor.auth.repo.SignUpCodeRepo
 import io.crstudio.tutor.auth.repo.SignUpRepo
 import io.crstudio.tutor.auth.repo.UserRepo
 import io.crstudio.tutor.messaging.EmailProducer
@@ -22,6 +24,7 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.server.ResponseStatusException
+import java.time.LocalDateTime
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -31,6 +34,7 @@ class AuthService (
     val jwtUtils: JwtUtils,
     val emailProducer: EmailProducer,
     val signUpRepo: SignUpRepo,
+    val signUpCodeRepo: SignUpCodeRepo,
     @Value("\${service.front-host}")
     val frontHost: String,
     @Value("\${service.token-front}")
@@ -87,26 +91,44 @@ class AuthService (
     }
 
     @Transactional
-    fun requestSignUp(signUpRequestDto: SignUpRequestDto) {
-        if (userRepo.existsByEmail(signUpRequestDto.email))
+    fun signUpRequest(dto: SignUpRequestDto) {
+        if (userRepo.existsByEmail(dto.email))
             throw ResponseStatusException(HttpStatus.FORBIDDEN, "Already signed up")
 
-        val signUpRequest = SignupRequest(
-            email = signUpRequestDto.email,
-            request = signUpRequestDto.request,
-        )
-        signUpRepo.save(signUpRequest)
+        signUpRepo.save(SignUpRequest(
+            email = dto.email,
+            request = dto.request,
+        ))
+
+        sendSignUpEmail(dto.email)
+    }
+
+    @Transactional
+    fun signUpCode(dto: SignUpCodeDto) {
+        if (userRepo.existsByEmail(dto.email))
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "Already signed up")
+        signUpRepo.save(SignUpRequest(
+            email = dto.email,
+            code = signUpCodeRepo.findByCodeAndValidUntilAfter(dto.code, LocalDateTime.now())
+                ?: throw ResponseStatusException(HttpStatus.FORBIDDEN, "invalid code"),
+            request = dto.request
+        ))
+
+        sendSignUpEmail(dto.email, true)
+    }
+
+    private fun sendSignUpEmail(email: String, withCode: Boolean = false) {
         val token = UUID.randomUUID().toString()
             .replace("-", "")
         signUpOps.set(
             "tutor-signup-$token", SignUpSession(
-                email = signUpRequestDto.email
+                email = email
             ), 10, TimeUnit.MINUTES
         )
-        logger.debug("signup session for ${signUpRequestDto.email}")
+        logger.debug("signup session for ${email}")
         emailProducer.signUpEmail(
             SignUpMailParams(
-                email = signUpRequestDto.email,
+                email = email,
                 host = frontHost,
                 link = "$frontHost$signUpPath?token=$token",
             )
@@ -130,9 +152,11 @@ class AuthService (
         if (userRepo.existsByEmail(signUpRequest.email)) {
             return
         }
+        val active = signUpRequest.code?.validUntil?.isAfter(LocalDateTime.now())
+            ?: false
         val user = userRepo.save(User(
             email = signUpSession.email,
-            active = false,
+            active = active,
             request = signUpRequest.request
         ))
         signUpRequest.user = userRepo.save(user)

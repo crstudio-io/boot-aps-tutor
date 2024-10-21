@@ -1,6 +1,7 @@
 package io.crstudio.tutor.auth.model
 
 import jakarta.persistence.*
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "USER_TABLE")
@@ -24,16 +25,18 @@ class User(
 
 @Entity
 @Table(name = "signup_request")
-class SignupRequest(
+class SignUpRequest(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
     @Column(unique = true)
     var email: String,
     var verified: Boolean = false,
-    val request: String?,
+    val request: String? = null,
     @OneToOne(fetch = FetchType.LAZY)
     var user: User? = null,
+    @ManyToOne(fetch = FetchType.LAZY)
+    val code: SignUpCode? = null,
 )
 
 data class UserDto(
@@ -45,6 +48,17 @@ data class UserDto(
         )
     }
 }
+
+@Entity
+@Table(name = "signup_code")
+class SignUpCode(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null,
+    val name: String,
+    val code: String,
+    val validUntil: LocalDateTime,
+)
 
 @Entity
 @Table(name = "ROLE_TABLE")
