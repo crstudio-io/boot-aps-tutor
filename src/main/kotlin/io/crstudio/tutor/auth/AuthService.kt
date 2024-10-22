@@ -155,7 +155,7 @@ class AuthService (
             ?: throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)
         signUpRequest.verified = true
         if (userRepo.existsByEmail(signUpRequest.email)) {
-            return
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "Already signed up")
         }
         val active = signUpRequest.code?.validUntil?.isAfter(LocalDateTime.now())
             ?: false
