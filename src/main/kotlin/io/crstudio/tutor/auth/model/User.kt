@@ -29,7 +29,6 @@ class SignUpRequest(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null,
-    @Column(unique = true)
     var email: String,
     var verified: Boolean = false,
     val request: String? = null,

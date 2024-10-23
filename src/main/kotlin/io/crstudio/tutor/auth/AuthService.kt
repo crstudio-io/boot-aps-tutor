@@ -78,12 +78,12 @@ class AuthService (
     fun finalizeSignIn(token: String): String {
         val signInSession = signInOps.get("tutor-signin-$token")
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
-        val userId = signInSession.userId
         if (signInSession.getIssued()) {
             logger.debug("use pre-issued jwt")
             return signInSession.getToken()
                 ?: throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "null token")
         }
+        val userId = signInSession.userId
         val jwt = jwtUtils.generateToken(userId)
         logger.debug("issue jwt for: $userId - $jwt")
         signInSession.issueToken(jwt)
@@ -155,7 +155,7 @@ class AuthService (
             ?: throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR)
         signUpRequest.verified = true
         if (userRepo.existsByEmail(signUpRequest.email)) {
-            return
+            throw ResponseStatusException(HttpStatus.FORBIDDEN, "Already signed up")
         }
         val active = signUpRequest.code?.validUntil?.isAfter(LocalDateTime.now())
             ?: false
