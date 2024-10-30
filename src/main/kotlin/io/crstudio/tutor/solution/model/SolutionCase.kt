@@ -1,6 +1,5 @@
 package io.crstudio.tutor.solution.model
 
-import io.crstudio.tutor.problem.model.TestCase
 import jakarta.persistence.*
 
 
@@ -13,11 +12,7 @@ class SolutionCase(
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "sol_id")
     val solution: Solution,
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "case_id")
-    val testCase: TestCase,
-    @Column(name = "case_id", insertable = false, updatable = false,)
-    val testId: Long,
+    val caseSeq: Long,
 
     @Enumerated(value = EnumType.STRING)
     val status: SolveCaseStatus = SolveCaseStatus.FAIL
@@ -25,4 +20,18 @@ class SolutionCase(
 
 enum class SolveCaseStatus {
     SUCCESS, FAIL, ERROR, TIMEOUT, OOM
+}
+
+data class SolutionCaseDto(
+    val id: Long?,
+    val caseSeq: Long,
+    val status: SolveCaseStatus
+) {
+    companion object {
+        fun fromEntity(entity: SolutionCase) = SolutionCaseDto(
+            id = entity.id,
+            caseSeq = entity.caseSeq,
+            status = entity.status,
+        )
+    }
 }

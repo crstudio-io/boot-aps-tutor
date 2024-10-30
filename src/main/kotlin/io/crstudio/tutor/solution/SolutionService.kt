@@ -35,6 +35,7 @@ class SolutionService(
                 problem = problemRepo.findByIdOrNull(probId)
                     ?: throw ResponseStatusException(HttpStatus.NOT_FOUND),
                 user = authFacade.getUser(),
+                caseResults = null,
             )
         )
 
@@ -52,7 +53,7 @@ class SolutionService(
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
         if (solution.problem.id != probId)
             throw ResponseStatusException(HttpStatus.NOT_FOUND)
-        return SolutionDto.fromEntity(solution, false)
+        return SolutionDto.fromEntity(solution, false, authFacade.getUser().id == solution.user.id)
     }
 
     fun findProbSolutionByMe(probId: Long, pageable: Pageable) =
