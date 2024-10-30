@@ -16,7 +16,7 @@ class Solution(
     @Enumerated(value = EnumType.STRING)
     val lang: Lang = Lang.JAVA17,
     @Enumerated(value = EnumType.STRING)
-    val status: Status = Status.PENDING,
+    val status: SolutionStatus = SolutionStatus.PENDING,
 
     val score: Int = 0,
 
@@ -32,7 +32,7 @@ enum class Lang {
     JAVA17
 }
 
-enum class Status {
+enum class SolutionStatus {
     PENDING, GRADING, SUCCESS, FAIL, ERROR
 }
 
@@ -40,7 +40,7 @@ data class SolutionDto(
     var id: Long?,
     val lang: Lang,
     val code: String,
-    val status: Status?,
+    val status: SolutionStatus?,
     val score: Int?,
     val username: String?
 ) {
