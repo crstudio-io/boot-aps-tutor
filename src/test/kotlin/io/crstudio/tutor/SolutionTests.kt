@@ -39,6 +39,7 @@ class SolutionTests {
                 null,
                 null,
                 null,
+                null,
             )
         )
 

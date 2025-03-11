@@ -6,9 +6,8 @@ import io.crstudio.tutor.messaging.model.GradePayload
 import io.crstudio.tutor.problem.repos.ProblemRepo
 import io.crstudio.tutor.solution.model.Solution
 import io.crstudio.tutor.solution.model.SolutionDto
-import io.crstudio.tutor.solution.model.Status
+import io.crstudio.tutor.solution.model.SolutionStatus
 import io.crstudio.tutor.solution.repos.SolutionRepo
-import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.HttpStatus
@@ -32,10 +31,11 @@ class SolutionService(
                 id = null,
                 code = solutionDto.code,
                 lang = solutionDto.lang,
-                status = Status.PENDING,
+                status = SolutionStatus.PENDING,
                 problem = problemRepo.findByIdOrNull(probId)
                     ?: throw ResponseStatusException(HttpStatus.NOT_FOUND),
                 user = authFacade.getUser(),
+                caseResults = null,
             )
         )
 
@@ -53,7 +53,7 @@ class SolutionService(
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND)
         if (solution.problem.id != probId)
             throw ResponseStatusException(HttpStatus.NOT_FOUND)
-        return SolutionDto.fromEntity(solution, false)
+        return SolutionDto.fromEntity(solution, false, authFacade.getUser().id == solution.user.id)
     }
 
     fun findProbSolutionByMe(probId: Long, pageable: Pageable) =

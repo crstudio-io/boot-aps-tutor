@@ -16,7 +16,7 @@ class Solution(
     @Enumerated(value = EnumType.STRING)
     val lang: Lang = Lang.JAVA17,
     @Enumerated(value = EnumType.STRING)
-    val status: Status = Status.PENDING,
+    val status: SolutionStatus = SolutionStatus.PENDING,
 
     val score: Int = 0,
 
@@ -25,14 +25,16 @@ class Solution(
     val problem: Problem,
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    val user: User
+    val user: User,
+    @OneToMany(mappedBy = "solution", fetch = FetchType.LAZY)
+    val caseResults: List<SolutionCase>?,
 )
 
 enum class Lang {
     JAVA17
 }
 
-enum class Status {
+enum class SolutionStatus {
     PENDING, GRADING, SUCCESS, FAIL, ERROR
 }
 
@@ -40,11 +42,26 @@ data class SolutionDto(
     var id: Long?,
     val lang: Lang,
     val code: String,
-    val status: Status?,
+    val status: SolutionStatus?,
     val score: Int?,
-    val username: String?
+    val username: String?,
+    val caseResults: List<SolutionCaseDto>?
 ) {
     companion object {
+        fun fromEntity(solution: Solution, omitCode: Boolean = true, withCases: Boolean = false) =
+            if (!withCases) fromEntity(solution, omitCode) else SolutionDto(
+                id = solution.id,
+                lang = solution.lang,
+                code = if (omitCode) "**omitted**" else solution.code,
+                status = solution.status,
+                score = solution.score,
+                username = solution.user.email,
+                caseResults = solution.caseResults?.stream()
+                    ?.map { SolutionCaseDto.fromEntity(it) }
+                    ?.toList(),
+            )
+
+
         fun fromEntity(solution: Solution, omitCode: Boolean = true) = SolutionDto(
             id = solution.id,
             lang = solution.lang,
@@ -52,6 +69,7 @@ data class SolutionDto(
             status = solution.status,
             score = solution.score,
             username = solution.user.email,
+            caseResults = null,
         )
     }
 }

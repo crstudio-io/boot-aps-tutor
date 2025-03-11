@@ -55,3 +55,7 @@ values (1, 1, 'JAVA17', 'ERROR', 0, E'import java.util.Scanner;\n\npublic class 
        (1, 2, 'JAVA17', 'FAIL', 33, E'import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        System.out.println(scanner.nextLine());\n    }\n}'),
        (1, 2, 'JAVA17', 'SUCCESS', 100, E'import java.util.Scanner;\n\npublic class Main {\n    public static void main(String[] args) {\n        Scanner scanner = new Scanner(System.in);\n        System.out.println(scanner.nextLine());\n    }\n}');
 
+insert into solution_case(sol_id, case_seq, status)
+values
+    (2, 1, 'SUCCESS'), (2, 2, 'FAIL'), (2, 3, 'ERROR'),
+    (3, 1, 'SUCCESS'), (3, 2, 'SUCCESS'), (3, 3, 'SUCCESS');
